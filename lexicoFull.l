@@ -18,12 +18,19 @@ integer    {digit}+
 
 tp_inteiro (int)
 tp_vazio   (void)
-tipos      {tp_inteiro}|{tp_vazio}
 
-op_adit [+-]
-op_mult [*/]
-op_comp (==)|<|>|(<=)|(>=)|(!=)
-op_atr	[=]
+op_add [+]
+op_sub [-]
+op_mul [*]
+op_div [/]
+
+op_igual  (==)
+op_maig   (>=)
+op_meig   (<=)
+op_maior  [<]
+op_menor  [>]
+op_diff   (!=)
+op_atr	  [=]
 
 op_virgula [,]
 op_pvirgula [;]
@@ -33,33 +40,44 @@ cmd_else	else
 cmd_while	while
 cmd_return	return
 
-parenteses [(]|[)]
-colchetes (\[)|(\])
-chaves (\{)|(\})
+parent_esq [(]
+parent_dir [)]
+colch_esq  (\[)
+colch_dir  (\])
+chave_esq  (\{)
+chave_dir  (\})
 
 comment   \/\*[^\*\/]*\*\/
 
-plvrReservada	{cmd_if}|{cmd_else}|{cmd_while}|{cmd_return}
-
-
 %%
 {id}			     {printf("Identificador\n");           return id;}
-
 {integer}		   {printf("Número inteiro\n");          return integer;}
+
 {tp_inteiro}	 {printf("Tipo inteiro\n");            return tp_inteiro;}
 {tp_vazio}		 {printf("Tipo vazio\n");              return tp_vazio;}
 
-{op_adit}		   {printf("Operador aditivo\n");        return op_adit;}
-{op_mult}		   {printf("Operador multiplicativo\n"); return op_mult;}
-{op_comp}		   {printf("Operador comparação\n");     return op_comp;}
+{op_add}		   {printf("Operador aditivo\n");        return op_add;}
+{op_sub}		   {printf("Operador subtrativo\n");        return op_sub;}
+{op_mul}		   {printf("Operador multiplicativo\n"); return op_mul;}
+{op_div}		   {printf("Operador divisório\n"); return op_div;}
+
+{op_igual}		   {printf("Operador igual\n");     return op_igual;}
+{op_maior}		   {printf("Operador maior\n");     return op_maior;}
+{op_menor}		   {printf("Operador menor\n");     return op_menor;}
+{op_maig}		   {printf("Operador maior igual\n");     return op_maig;}
+{op_meig}		   {printf("Operador menor igual\n");     return op_meig;}
+{op_diff}		   {printf("Operador diferente\n");     return op_diff;}
 {op_atr}		   {printf("Operador atribuição\n");     return op_atr;}
 
 {op_virgula}	 {printf("Vírgula\n");                 return op_virgula;}
 {op_pvirgula}	 {printf("Ponto e vírgula\n");         return op_pvirgula;}
 
-{parenteses}	 {printf("Parênteses\n");              return parenteses;}
-{colchetes}		 {printf("Colchetes\n");               return colchetes;}
-{chaves}		   {printf("Chaves\n");                  return chaves;}
+{parent_esq}	   {printf("Parêntese esq\n");              return parent_esq;}
+{parent_dir}	   {printf("Parêntese dir\n");              return parent_dir;}
+{colch_esq}		   {printf("Colchete esq\n");               return colch_esq;}
+{colch_dir}		   {printf("Colchete dir\n");               return colch_dir;}
+{chave_esq}		   {printf("Chave esq\n");                  return chave_esq;}
+{chave_dir}		   {printf("Chave dir\n");                  return chave_dir;}
 
 
 {cmd_if}		  {printf("Comando if\n");               return cmd_if;}
