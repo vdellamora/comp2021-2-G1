@@ -1,7 +1,7 @@
 %{
 #include <stdio.h>
 #include <string.h>
-#include "sintal.tab.h"
+#include "sintatico.tab.h"
 
 #define PREPARATOKEN; strcpy(yylval.token.nome, yytext); yylval.token.linha = linha; yylval.token.coluna = coluna;
 
@@ -50,45 +50,48 @@ chave_dir  (\})
 comment   \/\*[^\*\/]*\*\/
 
 %%
-{id}			     {printf("Identificador\n");           return id;}
-{integer}		   {printf("Número inteiro\n");          return integer;}
+\n 					{linha++; coluna = 1;}
+[ \t]+				{coluna += yyleng;}
 
-{tp_inteiro}	 {printf("Tipo inteiro\n");            return tp_inteiro;}
-{tp_vazio}		 {printf("Tipo vazio\n");              return tp_vazio;}
+{id}			    {PREPARATOKEN; coluna += yyleng; yylval.token.escopo = escopo[escopo_ponteiro];	return id;}
+{integer}		   	{PREPARATOKEN; coluna += yyleng;	return integer;}
 
-{op_add}		   {printf("Operador aditivo\n");        return op_add;}
-{op_sub}		   {printf("Operador subtrativo\n");        return op_sub;}
-{op_mul}		   {printf("Operador multiplicativo\n"); return op_mul;}
-{op_div}		   {printf("Operador divisório\n"); return op_div;}
+{tp_inteiro}	 	{PREPARATOKEN; coluna += yyleng;	return tp_inteiro;}
+{tp_vazio}		 	{PREPARATOKEN; coluna += yyleng;	return tp_vazio;}
 
-{op_igual}		   {printf("Operador igual\n");     return op_igual;}
-{op_maior}		   {printf("Operador maior\n");     return op_maior;}
-{op_menor}		   {printf("Operador menor\n");     return op_menor;}
-{op_maig}		   {printf("Operador maior igual\n");     return op_maig;}
-{op_meig}		   {printf("Operador menor igual\n");     return op_meig;}
-{op_diff}		   {printf("Operador diferente\n");     return op_diff;}
-{op_atr}		   {printf("Operador atribuição\n");     return op_atr;}
+{op_add}		   	{PREPARATOKEN; coluna += yyleng;	return op_add;}
+{op_sub}		   	{PREPARATOKEN; coluna += yyleng;	return op_sub;}
+{op_mul}		   	{PREPARATOKEN; coluna += yyleng;	return op_mul;}
+{op_div}		   	{PREPARATOKEN; coluna += yyleng;	return op_div;}
 
-{op_virgula}	 {printf("Vírgula\n");                 return op_virgula;}
-{op_pvirgula}	 {printf("Ponto e vírgula\n");         return op_pvirgula;}
+{op_igual}		   	{PREPARATOKEN; coluna += yyleng;	return op_igual;}
+{op_maior}		   	{PREPARATOKEN; coluna += yyleng;	return op_maior;}
+{op_menor}		   	{PREPARATOKEN; coluna += yyleng;	return op_menor;}
+{op_maig}		   	{PREPARATOKEN; coluna += yyleng;	return op_maig;}
+{op_meig}		   	{PREPARATOKEN; coluna += yyleng;	return op_meig;}
+{op_diff}		   	{PREPARATOKEN; coluna += yyleng;	return op_diff;}
+{op_atr}		   	{PREPARATOKEN; coluna += yyleng;	return op_atr;}
 
-{parent_esq}	   {printf("Parêntese esq\n");              return parent_esq;}
-{parent_dir}	   {printf("Parêntese dir\n");              return parent_dir;}
-{colch_esq}		   {printf("Colchete esq\n");               return colch_esq;}
-{colch_dir}		   {printf("Colchete dir\n");               return colch_dir;}
-{chave_esq}		   {printf("Chave esq\n");                  return chave_esq;}
-{chave_dir}		   {printf("Chave dir\n");                  return chave_dir;}
+{op_virgula}	 	{PREPARATOKEN; coluna += yyleng;	return op_virgula;}
+{op_pvirgula}	 	{PREPARATOKEN; coluna += yyleng;	return op_pvirgula;}
 
-
-{cmd_if}		  {printf("Comando if\n");               return cmd_if;}
-{cmd_else}		{printf("Comando else\n");             return cmd_else;}
-{cmd_while}		{printf("Comando while\n");            return cmd_while;}
-{cmd_return}	{printf("Comando return\n");           return cmd_return;}
+{parent_esq}	  	{PREPARATOKEN; coluna += yyleng;	return parent_esq;}
+{parent_dir}	 	{PREPARATOKEN; coluna += yyleng;	return parent_dir;}
+{colch_esq}		  	{PREPARATOKEN; coluna += yyleng;	return colch_esq;}
+{colch_dir}		  	{PREPARATOKEN; coluna += yyleng;	return colch_dir;}
+{chave_esq}		  	{PREPARATOKEN; coluna += yyleng; aumenta_escopo();	return chave_esq;}
+{chave_dir}		  	{PREPARATOKEN; coluna += yyleng; diminui_escopo();	return chave_dir;}
 
 
+{cmd_if}		  	{PREPARATOKEN; coluna += yyleng;	return cmd_if;}
+{cmd_else}			{PREPARATOKEN; coluna += yyleng;	return cmd_else;}
+{cmd_while}			{PREPARATOKEN; coluna += yyleng;	return cmd_while;}
+{cmd_return}		{PREPARATOKEN; coluna += yyleng;	return cmd_return;}
 
-{comment}	    {printf("Comentário\n");               return comment;}
-.             {printf("Cadeia indefinida \n");       qtd_erros++;}
+
+
+{comment}	    	{printf("Comentário\n");			return comment;}
+.             		{printf("Cadeia indefinida: %s\n", linha, coluna, yytext); coluna += yyleng; qtd_erros++;}
 
 
 %%
