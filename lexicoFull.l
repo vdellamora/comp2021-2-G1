@@ -53,7 +53,6 @@ comment   \/\*[^\*\/]*\*\/
 \n 					{linha++; coluna = 1;}
 [ \t]+				{coluna += yyleng;}
 
-{id}			    {PREPARATOKEN; coluna += yyleng; yylval.token.escopo = escopo[escopo_ponteiro];	return id;}
 {integer}		   	{PREPARATOKEN; coluna += yyleng;	return integer;}
 
 {tp_inteiro}	 	{PREPARATOKEN; coluna += yyleng;	return tp_inteiro;}
@@ -79,8 +78,8 @@ comment   \/\*[^\*\/]*\*\/
 {parent_dir}	 	{PREPARATOKEN; coluna += yyleng;	return parent_dir;}
 {colch_esq}		  	{PREPARATOKEN; coluna += yyleng;	return colch_esq;}
 {colch_dir}		  	{PREPARATOKEN; coluna += yyleng;	return colch_dir;}
-{chave_esq}		  	{PREPARATOKEN; coluna += yyleng; aumenta_escopo();	return chave_esq;}
-{chave_dir}		  	{PREPARATOKEN; coluna += yyleng; diminui_escopo();	return chave_dir;}
+{chave_esq}		  	{PREPARATOKEN; coluna += yyleng;	return chave_esq;}
+{chave_dir}		  	{PREPARATOKEN; coluna += yyleng;	return chave_dir;}
 
 
 {cmd_if}		  	{PREPARATOKEN; coluna += yyleng;	return cmd_if;}
@@ -88,10 +87,16 @@ comment   \/\*[^\*\/]*\*\/
 {cmd_while}			{PREPARATOKEN; coluna += yyleng;	return cmd_while;}
 {cmd_return}		{PREPARATOKEN; coluna += yyleng;	return cmd_return;}
 
+{id}			    {PREPARATOKEN; coluna += yyleng;	return id;}
+
 
 
 {comment}	    	{printf("Comentário\n");			return comment;}
-.             		{printf("Cadeia indefinida: %s\n", linha, coluna, yytext); coluna += yyleng; qtd_erros++;}
+.             		{printf("Cadeia indefinida: %s\nLinha: %d\nColuna: %d\n", yytext, linha, coluna); coluna += yyleng; qtd_erros++;}
 
 
 %%
+
+int yywrap() {
+  return 1;
+}

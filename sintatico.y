@@ -13,6 +13,14 @@ void yyerror(const char* e){
 }
 
 %}
+
+%union{
+    struct Token{
+        int linha, coluna, escopo;
+        char nome[30];
+    } token;
+}
+
 %token <token> letter
 %token <token> id
 %token <token> digit
@@ -44,46 +52,50 @@ void yyerror(const char* e){
 %token <token> chave_dir
 %token <token> comment
 
-%type <node> numero
-
 %%
 
-numero: 
-       integer {}
-; 
-        
+programa :
+    declaration {}
+	| atribuicao {}
+;
+declaration:
+	tp_inteiro id op_pvirgula {}
+;
+atribuicao:
+	id op_atr integer op_pvirgula {}
+;
 %%
 int main(){
-    #ifdef YYDEBUF
+    #ifdef YYDEBUG
         yydebug=1;
     #endif
 
-	char nomeArqCIPL[64];
-	char nomePastaArqCIPL[] = "./tests/";
-	FILE *arquivoCIPL;
+	char nomeArqCMINUS[64];
+	//char nomePastaArqCMINUS[] = "./tests/";
+	FILE *arquivoCMINUS;
 
     printf("Insira o nome do arquivo dentro da pasta tests: ");
-	scanf("%s", nomeArqCIPL);
-	strcat(nomePastaArqCIPL, nomeArqCIPL);
-	arquivoCIPL = fopen(nomePastaArqCIPL,"r");
-	if(!arquivoCIPL){
+	scanf("%s", nomeArqCMINUS);
+	//strcat(nomePastaArqCMINUS, nomeArqCMINUS);
+	arquivoCMINUS = fopen(nomeArqCMINUS,"r");
+	if(!arquivoCMINUS){
 		printf("Nao foi possível abrir arquivo.\n");
 		return -1;
 	}
-	yyin = arquivoCIPL;
+	yyin = arquivoCMINUS;
 
-    escopo_atual = 0;
-    escopo_ponteiro = 0;
-    simbolos_ponteiro = -1;
+    //escopo_atual = 0;
+    //escopo_ponteiro = 0;
+    //simbolos_ponteiro = -1;
 
 	yyparse();
 
-    imprimirTabelaSimbolos();
+    //imprimirTabelaSimbolos();
 
 
-	fclose(arquivoCIPL);
-    esvaziarTabela();
-    esvaziarArvore();
+	fclose(arquivoCMINUS);
+    //esvaziarTabela();
+    //esvaziarArvore();
 	yylex_destroy();
 	return 0;
 }

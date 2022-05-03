@@ -141,7 +141,9 @@ enum yysymbol_kind_t
   YYSYMBOL_chave_dir = 31,                 /* chave_dir  */
   YYSYMBOL_comment = 32,                   /* comment  */
   YYSYMBOL_YYACCEPT = 33,                  /* $accept  */
-  YYSYMBOL_numero = 34                     /* numero  */
+  YYSYMBOL_programa = 34,                  /* programa  */
+  YYSYMBOL_declaration = 35,               /* declaration  */
+  YYSYMBOL_atribuicao = 36                 /* atribuicao  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -467,18 +469,18 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  3
+#define YYFINAL  8
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   2
+#define YYLAST   11
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  33
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  2
+#define YYNNTS  4
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  2
+#define YYNRULES  5
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  4
+#define YYNSTATES  12
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   287
@@ -530,7 +532,7 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    52,    52
+       0,    58,    58,    59,    62,    65
 };
 #endif
 
@@ -552,7 +554,7 @@ static const char *const yytname[] =
   "op_menor", "op_diff", "op_atr", "op_virgula", "op_pvirgula", "cmd_if",
   "cmd_else", "cmd_while", "cmd_return", "parent_esq", "parent_dir",
   "colch_esq", "colch_dir", "chave_esq", "chave_dir", "comment", "$accept",
-  "numero", YY_NULLPTR
+  "programa", "declaration", "atribuicao", YY_NULLPTR
 };
 
 static const char *
@@ -562,12 +564,12 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-7)
+#define YYPACT_NINF (-19)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
 
-#define YYTABLE_NINF (-3)
+#define YYTABLE_NINF (-6)
 
 #define yytable_value_is_error(Yyn) \
   0
@@ -576,7 +578,8 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      -6,     1,     2,    -7
+      -4,   -18,    -2,     4,     5,     6,     1,   -13,   -19,   -12,
+      10,    11
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -584,19 +587,20 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     0,     0,     1
+       0,     0,     0,     0,     0,     0,     0,     0,     1,     0,
+       0,     0
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-      -7,    -7
+     -19,   -19,   -19,   -19
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,     2
+       0,     3,     4,     5
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -604,31 +608,34 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-       1,    -2,     3
+       1,     6,     7,     2,     8,    -2,    -3,     9,    10,    11,
+      -4,    -5
 };
 
 static const yytype_int8 yycheck[] =
 {
-       6,     0,     0
+       4,    19,     4,     7,     0,     0,     0,     6,    21,    21,
+       0,     0
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     6,    34,     0
+       0,     4,     7,    34,    35,    36,    19,     4,     0,     6,
+      21,    21
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    33,    34
+       0,    33,    34,    34,    35,    36
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     1
+       0,     2,     1,     1,     3,     4
 };
 
 
@@ -1361,14 +1368,32 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-  case 2: /* numero: integer  */
-#line 52 "sintatico.y"
-               {}
-#line 1368 "sintatico.tab.c"
+  case 2: /* programa: declaration  */
+#line 58 "sintatico.y"
+                {}
+#line 1375 "sintatico.tab.c"
+    break;
+
+  case 3: /* programa: atribuicao  */
+#line 59 "sintatico.y"
+                     {}
+#line 1381 "sintatico.tab.c"
+    break;
+
+  case 4: /* declaration: tp_inteiro id op_pvirgula  */
+#line 62 "sintatico.y"
+                                  {}
+#line 1387 "sintatico.tab.c"
+    break;
+
+  case 5: /* atribuicao: id op_atr integer op_pvirgula  */
+#line 65 "sintatico.y"
+                                      {}
+#line 1393 "sintatico.tab.c"
     break;
 
 
-#line 1372 "sintatico.tab.c"
+#line 1397 "sintatico.tab.c"
 
       default: break;
     }
@@ -1592,39 +1617,39 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 55 "sintatico.y"
+#line 67 "sintatico.y"
 
 int main(){
-    #ifdef YYDEBUF
+    #ifdef YYDEBUG
         yydebug=1;
     #endif
 
-	char nomeArqCIPL[64];
-	char nomePastaArqCIPL[] = "./tests/";
-	FILE *arquivoCIPL;
+	char nomeArqCMINUS[64];
+	//char nomePastaArqCMINUS[] = "./tests/";
+	FILE *arquivoCMINUS;
 
     printf("Insira o nome do arquivo dentro da pasta tests: ");
-	scanf("%s", nomeArqCIPL);
-	strcat(nomePastaArqCIPL, nomeArqCIPL);
-	arquivoCIPL = fopen(nomePastaArqCIPL,"r");
-	if(!arquivoCIPL){
+	scanf("%s", nomeArqCMINUS);
+	//strcat(nomePastaArqCMINUS, nomeArqCMINUS);
+	arquivoCMINUS = fopen(nomeArqCMINUS,"r");
+	if(!arquivoCMINUS){
 		printf("Nao foi possível abrir arquivo.\n");
 		return -1;
 	}
-	yyin = arquivoCIPL;
+	yyin = arquivoCMINUS;
 
-    escopo_atual = 0;
-    escopo_ponteiro = 0;
-    simbolos_ponteiro = -1;
+    //escopo_atual = 0;
+    //escopo_ponteiro = 0;
+    //simbolos_ponteiro = -1;
 
 	yyparse();
 
-    imprimirTabelaSimbolos();
+    //imprimirTabelaSimbolos();
 
 
-	fclose(arquivoCIPL);
-    esvaziarTabela();
-    esvaziarArvore();
+	fclose(arquivoCMINUS);
+    //esvaziarTabela();
+    //esvaziarArvore();
 	yylex_destroy();
 	return 0;
 }
