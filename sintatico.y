@@ -54,15 +54,64 @@ void yyerror(const char* e){
 
 %%
 
-programa :
-    declaration {}
-	| atribuicao {}
+main: 
+	type id parent_esq parent_dir chave_esq comandos chave_dir {}
+;
+comandos:
+	comandos comando {}
+	| comando {}
+;
+comando :
+    declaration op_pvirgula {}
+	| atribuicao op_pvirgula {}
+	| cmd_return expressaoAdd op_pvirgula {}
+	| enquanto {}
+;
+enquanto:
+	cmd_while parent_esq expressao parent_dir chave_esq comandos chave_dir {}
 ;
 declaration:
-	tp_inteiro id op_pvirgula {}
+	type id {}
 ;
 atribuicao:
-	id op_atr integer op_pvirgula {}
+	id op_atr expressao {}	
+;
+expressao:
+	expressaoAdd simboloLogico expressaoAdd {}
+	| expressaoAdd {}
+;
+expressaoAdd:
+	expressaoAdd addsub expressaoMul {}
+	| expressaoMul {}
+;
+expressaoMul:
+	expressaoMul muldiv termo {}
+	| termo {}
+;
+type:
+	tp_inteiro {}
+	| tp_vazio {}
+;
+termo: 
+	parent_esq expressaoAdd parent_dir {}
+	| id {}
+	| integer {}
+;
+simboloLogico:
+	op_igual {}
+	| op_maig {}
+	| op_meig {}
+	| op_maior {}
+	| op_menor {}
+	| op_diff {}
+;
+muldiv:
+	op_mul {}
+	| op_div {}
+;
+addsub:
+	op_add {}
+	| op_sub {}
 ;
 %%
 int main(){
