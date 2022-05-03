@@ -1,8 +1,8 @@
-CPP      = gcc
+CPP      = g++
 CXXINCS  = -I"include/" 
 CXXFLAGS = $(CXXINCS) -O2
-SRCS  	 = $(shell find src -name '*.c')
-OBJ      = $(addprefix obj/,$(notdir $(SRCS:%.c=%.o))) 
+SRCS  	 = $(shell find src -name '*.cpp')
+OBJ      = $(addprefix obj/,$(notdir $(SRCS:%.cpp=%.o))) 
 BIN      = exe
 RM       = rm -f
 
@@ -19,5 +19,5 @@ clean: clean-custom
 $(BIN): $(OBJ)
 	$(CPP) $(OBJ) -o $(BIN) $(CXXFLAGS)
 
-obj/%.o: src/%.c
+obj/%.o: src/%.cpp
 	$(CPP) -c $< -o $@ $(CXXFLAGS)

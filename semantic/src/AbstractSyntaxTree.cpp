@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "AbstractSyntaxTree.h"
+#include "AbstractSyntaxTree.hpp"
 #define BLUE "\033[1;34:40m"
 #define RED "\033[1;31:40m"
 #define GREEN "\033[1;32:40m"
