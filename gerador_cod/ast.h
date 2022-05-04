@@ -1,19 +1,19 @@
 #ifndef COMPILER_AST
 #define COMPILER_AST
 
+//#include "lexer.h"
+
 enum NodeType{
-    UNKNOWN,
-    STMT, // instruções
-    EXPR, // expressões
-    CONSTANT, // constantes
+    STMT,
+    EXPR,
+    CONSTANT,
     IDENTIFIER,
-    LOG, // expressão lógica
-    REL, // expressão relacional
-    ARI, // expressão aritmética
-    ASSIGN, // atribuição de valor
-    IF_STMT, // instrução if
-    WHILE_STMT, // instrução while
-    TEMP  // temporários
+    LOG,
+    REL,
+    ARI,
+    ASSIGN,
+    WHILE_STMT,
+    TEMP
 };
 
 enum ExprType{
@@ -32,14 +32,12 @@ struct Node{
     unsigned NewLabel();
 };
 
-// estrutura para as instruções
 struct Statement : public Node{
     Statement();
     Statement(int type);
     virtual void Gen();
 };
 
-// estrutura para as expressões
 struct Expression : public Node{
     int type;
     Token * token;
@@ -50,8 +48,7 @@ struct Expression : public Node{
     string Type();
 };
 
-struct Temp : public Expression
-{
+struct Temp : public Expression{
     static int count;
     int number;
     Temp(int etype);
@@ -60,7 +57,7 @@ struct Temp : public Expression
 
 struct Constant : public Expression{
     Constant(int etype, Token *t);
-}
+};
 
 struct Identifier : public Expression{
     Identifier(int etype, Token *t);
@@ -84,19 +81,10 @@ struct Arithmetic : public Expression{
     Arithmetic(int etype, Token *t, Expression *e1, Expression *e2);
 };
 
-
 struct Assign : public Statement{
     Expression *id;
     Expression *expr;
     Assign(Expression *i, Expression *e);
-    void Gen();
-};
-
-struct If : public Statement{
-    unsigned after;
-    Expression *expr;
-    Statement *stmt;
-    If(Expression *e, Statement *s);
     void Gen();
 };
 

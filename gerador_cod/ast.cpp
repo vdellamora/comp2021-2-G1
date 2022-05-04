@@ -1,52 +1,20 @@
 #include <iostream>
 #include <sstream>
 #include "ast.h"
-#include "error.h"
 #include "gen.h"
 using std::cout;
 using std::endl;
 using std::stringstream;
 
-extern Lexer *scanner;
-// ----
-// Node
-// ----
-
-unsigned Node::labels = 0;
-
-Node::Node() : 
-    node_type(NodeType::UNKNOWN) 
-{
-
-}
-
-Node::Node(int t) : 
-    node_type(t) 
-{
-
-}
-
-string Node::ToString() { 
-    return ""; 
-}
-
-unsigned Node::NewLabel() { 
-    return ++labels; 
-}
-
 // ---------
 // Statement
 // ---------
 
-Statement::Statement() : 
-    Node(NodeType::STMT) 
-{
+Statement::Statement() : Node(NodeType::STMT) {
 
 }
 
-Statement::Statement(int type) : 
-    Node(type) 
-{
+Statement::Statement(int type) : Node(type) {
 
 }
 
@@ -55,7 +23,7 @@ void Statement::Gen() {
 }
 
 // ----------
-// Expressões
+// Expression
 // ----------
 
 Expression::Expression(Token *t) : 
@@ -74,15 +42,12 @@ Expression::Expression(int ntype, int etype, Token *t) :
 
 }
 
-string Expression::ToString()
-{
+string Expression::ToString(){
     return token->lexeme;
 }
 
-string Expression::Type()
-{
-    switch (type)
-    {
+string Expression::Type(){
+    switch (type){
     case ExprType::INT:
         return "int";
         break;
@@ -95,7 +60,7 @@ string Expression::Type()
 }
 
 // ----
-// Criação de variáveis Temporárias
+// Temp
 // ----
 
 int Temp::count = 0;
@@ -106,20 +71,17 @@ Temp::Temp(int etype) :
 {
 }
 
-string Temp::ToString()
-{
+string Temp::ToString(){
     stringstream ss;
     ss << "t" << number;
     return ss.str();
 }
 
 // --------
-// Constantes
+// Constant
 // --------
 
-Constant::Constant(int etype, Token *t) : 
-    Expression(NodeType::CONSTANT, etype, t) 
-{
+Constant::Constant(int etype, Token *t) : Expression(NodeType::CONSTANT, etype, t) {
 
 }
 
@@ -127,14 +89,12 @@ Constant::Constant(int etype, Token *t) :
 // Identifier
 // ----------
 
-Identifier::Identifier(int etype, Token *t) : 
-    Expression(NodeType::IDENTIFIER, etype, t) 
-{
+Identifier::Identifier(int etype, Token *t) : Expression(NodeType::IDENTIFIER, etype, t) {
 
 }
 
 // -------
-// Expressões Lógicas
+// Logical
 // -------
 
 Logical::Logical(Token *t, Expression *e1, Expression *e2) : 
@@ -148,12 +108,12 @@ Logical::Logical(Token *t, Expression *e1, Expression *e2) :
         ss << "\'" << token->lexeme << "\' usado com operandos não booleanos ("
            << expr1->ToString() << ":" << expr1->Type() << ") ("
            << expr2->ToString() << ":" << expr2->Type() << ") ";
-        throw SyntaxError{scanner->Lineno(), ss.str()};
+        //throw //SyntaxError;
     }
 }
 
 // ----------
-// Expressões Relationais
+// Relational
 // ----------
 
 Relational::Relational(Token *t, Expression *e1, Expression *e2) : 
@@ -167,12 +127,12 @@ Relational::Relational(Token *t, Expression *e1, Expression *e2) :
         ss << "\'" << token->lexeme << "\' usado com operandos de tipos diferentes ("
            << expr1->ToString() << ":" << expr1->Type() << ") ("
            << expr2->ToString() << ":" << expr2->Type() << ") ";
-        throw SyntaxError{scanner->Lineno(), ss.str()};
+        //throw //SyntaxError;
     }
 }
 
 // ----------
-// Expressão aritméticas
+// Arithmetic
 // ----------
 
 Arithmetic::Arithmetic(int etype, Token *t, Expression *e1, Expression *e2) : 
@@ -186,12 +146,12 @@ Arithmetic::Arithmetic(int etype, Token *t, Expression *e1, Expression *e2) :
         ss << "\'" << token->lexeme << "\' usado com operandos de tipos diferentes ("
            << expr1->ToString() << ":" << expr1->Type() << ") ("
            << expr2->ToString() << ":" << expr2->Type() << ") ";
-        throw SyntaxError{scanner->Lineno(), ss.str()};
+        //throw //SyntaxError;
     }
 }
 
 // ------
-// Atribuições
+// Assign
 // ------
 
 Assign::Assign(Expression *i, Expression *e) : 
@@ -205,7 +165,7 @@ Assign::Assign(Expression *i, Expression *e) :
         ss << "\'=\' usado com operandos de tipos diferentes ("
            << id->ToString() << ":" << id->Type() << ") ("
            << expr->ToString() << ":" << expr->Type() << ") ";
-        throw SyntaxError{scanner->Lineno(), ss.str()};
+        //throw //SyntaxError;
     }
 }
 
@@ -213,34 +173,6 @@ void Assign::Gen(){
     Expression * left = Lvalue(id);
     Expression * right = Rvalue(expr);
     cout << '\t' << left->ToString() << " = " << right->ToString() << endl;
-}
-
-// ----
-// If
-// ----
-
-If::If(Expression *e, Statement *s) : 
-    Statement(NodeType::IF_STMT), 
-    expr(e), 
-    stmt(s)
-{
-    // verificação de tipos
-    if (expr->type != ExprType::BOOL)
-    {
-        stringstream ss;
-        ss << "expressão condicional \'" << expr->ToString() << "\' não booleana";
-        throw SyntaxError{scanner->Lineno(), ss.str()};
-    }
-
-    // cria novo rótulo
-    after = NewLabel();
-}
-
-void If::Gen(){
-    Expression * n = Rvalue(expr);
-    cout << "\tifFalse " << n->ToString() << " goto L" << after << endl;
-    stmt->Gen();
-    cout << 'L' << after << ':' << endl;
 }
 
 // -----
